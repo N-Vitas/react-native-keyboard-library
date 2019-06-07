@@ -5,7 +5,7 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
 
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -45,19 +45,32 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
     }
   }
 
-  @Override
-  public boolean isOpen() {
+  @ReactMethod
+  public void getStatus(final Promise promise) {
+    Activity activity = getCurrentActivity();
+    if (activity != null) {
+      InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+      if (imm.isActive()) {
+        promise.resolve("OPEN");
+        return;
+      }
+    }
+    promise.resolve("CLOSED");
+  }
+  @ReactMethod
+  public void isOpen(final Promise promise) {
     try {
       Activity activity = getCurrentActivity();
       if (activity != null) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm.isActive()) {
-          return true;
+          promise.resolve(true);
+          return;
         }
       }
-      return false;
+      promise.resolve(false);
     } catch (IllegalViewOperationException e) {
-      return false;
+      promise.resolve(false);
     }
   }
 
