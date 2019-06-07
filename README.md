@@ -3,7 +3,7 @@
 
 ## Getting started
 
-`$ npm install react-native-keyboard-library --save`
+`$ npm install N-Vitas/react-native-keyboard-library --save`
 
 ### Mostly automatic installation
 
