@@ -45,7 +45,7 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
+  @Override
   public boolean isOpen() {
     try {
       Activity activity = getCurrentActivity();
