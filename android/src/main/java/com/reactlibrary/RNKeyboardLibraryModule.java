@@ -46,16 +46,18 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void isOpen(Callback successCallback, Callback errorCallback) {
+  public boolean isOpen() {
     try {
       Activity activity = getCurrentActivity();
       if (activity != null) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        successCallback.invoke(imm.isActive());
+        if (imm.isActive()) {
+          return true;
+        }
       }
-      successCallback.invoke(false);
+      return false;
     } catch (IllegalViewOperationException e) {
-      errorCallback.invoke(e.getMessage());
+      return false;
     }
   }
 
