@@ -39,9 +39,7 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
     Activity activity = getCurrentActivity();
     if (activity != null) {
       InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-      if (!imm.isActive()) {
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
-      }
+      imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
     }
   }
 
@@ -79,9 +77,7 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
     Activity activity = getCurrentActivity();
     if (activity != null) {
       InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-      if (imm.isActive()) {
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
-      }
+      imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
     }
   }
 
