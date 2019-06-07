@@ -5,11 +5,10 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
 
-import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.uimanager.IllegalViewOperationException;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -44,31 +43,12 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getStatus(final Promise promise) {
+  public void callOpen(final Callback callback){
     Activity activity = getCurrentActivity();
     if (activity != null) {
       InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-      if (imm.isActive()) {
-        promise.resolve("OPEN");
-        return;
-      }
-    }
-    promise.resolve("CLOSED");
-  }
-  @ReactMethod
-  public void isOpen(final Promise promise) {
-    try {
-      Activity activity = getCurrentActivity();
-      if (activity != null) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (imm.isActive()) {
-          promise.resolve(true);
-          return;
-        }
-      }
-      promise.resolve(false);
-    } catch (IllegalViewOperationException e) {
-      promise.resolve(false);
+      imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
+      callback.invoke(true);
     }
   }
 
@@ -78,6 +58,15 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
     if (activity != null) {
       InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
       imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
+    }
+  }
+  @ReactMethod
+  public void callClosed(final Callback callback){
+    Activity activity = getCurrentActivity();
+    if (activity != null) {
+      InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+      imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
+      callback.invoke(false);
     }
   }
 
@@ -90,6 +79,18 @@ public class RNKeyboardLibraryModule extends ReactContextBaseJavaModule {
         closed();
       } else {
         open();
+      }
+    }
+  }
+  @ReactMethod
+  public void callToggle(final Callback callback){
+    Activity activity = getCurrentActivity();
+    if (activity != null) {
+      InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+      if (imm.isActive()) {
+        callOpen(callback);
+      } else {
+        callClosed(callback);
       }
     }
   }
